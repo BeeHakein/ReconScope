@@ -1,0 +1,111 @@
+services:
+  # ─── Frontend ────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/src:/app/src  # Hot Reload in Dev
+    environment:
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:8000}
+      - VITE_WS_URL=${VITE_WS_URL:-ws://localhost:8000}
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # ─── Backend (FastAPI) ───────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/app:/app/app  # Hot Reload in Dev
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-postgresql+asyncpg://reconscope:reconscope@postgres:5432/reconscope}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+      - NVD_API_KEY=${NVD_API_KEY:-}
+      - SHODAN_API_KEY=${SHODAN_API_KEY:-}
+      - SECRET_KEY=${SECRET_KEY:-change-me-in-production-use-openssl-rand-hex-32}
+      - DEBUG=${DEBUG:-true}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    restart: unless-stopped
+
+  # ─── Celery Worker ──────────────────────────────────────
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend/app:/app/app
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-postgresql+asyncpg://reconscope:reconscope@postgres:5432/reconscope}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+      - NVD_API_KEY=${NVD_API_KEY:-}
+      - SHODAN_API_KEY=${SHODAN_API_KEY:-}
+      - SECRET_KEY=${SECRET_KEY:-change-me-in-production-use-openssl-rand-hex-32}
+      - DEBUG=${DEBUG:-true}
+    depends_on:
+      - backend
+      - redis
+    command: celery -A app.core.celery_app.celery worker --loglevel=info --concurrency=4
+    restart: unless-stopped
+
+  # ─── Celery Flower (Monitoring) ─────────────────────────
+  flower:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5555:5555"
+    environment:
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+    depends_on:
+      - worker
+    command: celery -A app.core.celery_app.celery flower --port=5555
+    restart: unless-stopped
+
+  # ─── PostgreSQL ─────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-reconscope}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-reconscope}
+      - POSTGRES_DB=${POSTGRES_DB:-reconscope}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reconscope"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ─── Redis ──────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:

@@ -1,0 +1,41 @@
+# ReconScope – Frontend Engineer Agent
+
+## Rolle
+Frontend Engineer Agent
+
+## Zuständigkeit
+`frontend/` Ordner
+
+## Tech-Stack
+- **Framework:** React 18 + Vite
+- **Styling:** TailwindCSS mit dunklem Cybersecurity-Theme
+- **Graph:** Cytoscape.js via `react-cytoscapejs`
+- **State:** React Context + useReducer (kein Redux)
+- **API:** Axios Client + Custom Hooks
+- **WebSocket:** Native WebSocket API mit Reconnect Logic
+- **Komponenten:** Functional Components mit Hooks
+
+## Design
+- Dunkelblau/Schwarz Background
+- Akzentfarben: rot=critical, orange=high, gelb=medium, grün=low, cyan=info
+- Responsive: Desktop-first, min-width 1280px
+
+## Clean Code
+- Custom Hooks für wiederverwendbare Logik
+- Komponenten max 150 Zeilen, sonst aufteilen
+- Props mit PropTypes oder JSDoc dokumentieren
+- Keine Inline-Styles, alles über Tailwind Classes
+- Konstanten in eigenen Dateien (colors, config, etc.)
+
+## Secure Coding
+- XSS Prevention: Kein `dangerouslySetInnerHTML`
+- Input Sanitization im Frontend UND Backend
+- WebSocket Reconnect mit Backoff
+- Keine Secrets im Frontend Code
+
+## Testing
+- **Tools:** Vitest + React Testing Library
+- **Komponenten:** Render Test + User Interaction Test
+- **Custom Hooks:** `renderHook` Tests
+- **API Client:** Mock Axios Responses
+- **Ordner:** `frontend/src/__tests__/` spiegelt `frontend/src/`

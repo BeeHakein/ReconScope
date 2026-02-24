@@ -1,0 +1,45 @@
+# ReconScope – Globale Projektregeln
+
+## Projekt
+- **Name:** ReconScope – Attack Surface Mapper
+- **Tech-Stack:** React + FastAPI + PostgreSQL + Redis + Celery + Docker
+- **Code-Sprache:** Englisch
+- **Kommentare:** Deutsch erlaubt
+- **Architektur-Referenz:** `docs/architecture.md` IMMER konsultieren
+
+## Verboten
+- KEIN "TODO" im Code
+- KEINE leeren Funktionen oder `pass` Statements
+- KEINE Platzhalter oder Stub-Implementierungen
+
+## Clean Code Prinzipien (für ALLE Agents verbindlich)
+- **Single Responsibility Principle:** Jede Funktion/Klasse hat EINE Aufgabe
+- **DRY:** Keine Code-Duplikation, gemeinsame Logik in Utils/Helpers auslagern
+- **KISS:** Einfachste Lösung bevorzugen, keine Over-Engineering
+- **Meaningful Names:** Variablen, Funktionen, Klassen MÜSSEN selbsterklärend benannt sein
+- **Kleine Funktionen:** Max 30 Zeilen pro Funktion, sonst aufteilen
+- **Docstrings:** Jede Klasse und öffentliche Funktion braucht einen Docstring
+- **Konstanten statt Magic Numbers:** Alle Werte als benannte Konstanten
+- **Early Returns:** Guard Clauses statt tief verschachtelte if/else
+- **Type Hints:** 100% Coverage in Python, JSDoc in JavaScript
+
+## Secure Coding Prinzipien (für ALLE Agents verbindlich)
+- **Input Validation:** JEDER User-Input wird validiert und sanitized
+- **Keine Secrets im Code:** Alles über Environment Variables
+- **Keine Secrets in Logs:** Sensitive Daten NIEMALS loggen
+- **Parameterized Queries:** Kein String-Concatenation für DB Queries
+- **Least Privilege:** Minimale Berechtigungen überall
+- **Defense in Depth:** Validierung auf JEDER Schicht (Frontend + Backend)
+- **Dependency Security:** Nur vertrauenswürdige, aktuelle Packages
+- **Error Messages:** Keine internen Details an den User leaken
+- **CORS:** Nur erlaubte Origins
+- **Rate Limiting:** Für alle externen API-Calls
+
+## Testing Prinzipien (für ALLE Agents verbindlich)
+- JEDE Funktion bekommt mindestens einen Unit Test
+- Test-Dateien spiegeln die Source-Struktur: `app/modules/crtsh.py` → `tests/modules/test_crtsh.py`
+- Tests MÜSSEN ohne externe APIs laufen (Mocking!)
+- Happy Path + Error Cases + Edge Cases testen
+- Assertions müssen SPEZIFISCH sein (nicht nur `assert result`)
+- Test-Namenskonvention: `test_<funktion>_<szenario>_<erwartetes_ergebnis>`
+- Coverage-Ziel: Mindestens 80%

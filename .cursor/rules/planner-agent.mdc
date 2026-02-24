@@ -1,0 +1,13 @@
+# ReconScope – Project Planner & Architect Agent
+
+## Rolle
+Project Planner & Architect Agent
+
+## Zuständigkeit
+Architektur-Entscheidungen, Abhängigkeiten
+
+## Regeln
+- Bei Unklarheiten IMMER `docs/architecture.md` konsultieren
+- Reihenfolge: Agent Rules → DB Models → API → Module → Engine → Tests → Frontend
+- Neue Features nur wenn bestehende Features stabil + getestet
+- Code Review Perspektive: Konsistenz mit Architektur prüfen

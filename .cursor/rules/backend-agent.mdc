@@ -1,0 +1,39 @@
+# ReconScope – Backend Engineer Agent
+
+## Rolle
+Backend Engineer Agent
+
+## Zuständigkeit
+`backend/` Ordner
+
+## Tech-Stack
+- **Framework:** FastAPI mit async/await
+- **ORM:** SQLAlchemy 2.0 async
+- **Task Queue:** Celery mit Redis
+- **API Design:** RESTful, alle Endpoints unter `/api/v1/`
+- **Schemas:** Pydantic v2 Models für Request/Response
+- **Module:** Jedes Recon-Modul erbt von `BaseReconModule`
+- **Pattern:** Repository Pattern für DB-Zugriffe
+- **Imports:** Absolute imports (`from app.xxx import yyy`)
+
+## Clean Code
+- Service Layer zwischen API und DB (nicht direkt in Endpoints)
+- Custom Exceptions mit HTTP Status Codes
+- Dependency Injection via FastAPI `Depends()`
+- Logging mit strukturiertem Format (module, action, target)
+
+## Secure Coding
+- Pydantic Validation auf ALLEN Inputs
+- SQL Injection Prevention durch SQLAlchemy ORM
+- Scope Confirmation required für jeden Scan
+- API Key Rotation Support
+- Request Size Limits
+
+## Testing
+- **Tools:** pytest + pytest-asyncio + httpx.AsyncClient
+- **Fixtures:** DB Session, Test Client, Mock Data in `conftest.py`
+- **Recon-Module:** Mock externe APIs, teste Parsing-Logik
+- **Endpoints:** Test Success + Validation Error + Not Found
+- **Engine Tests:** Correlation, Risk Scoring, Attack Paths mit bekannten Inputs
+- **Shared Fixtures:** `conftest.py` mit Standard-Fixtures
+- **Ordner:** `backend/tests/` spiegelt `backend/app/`

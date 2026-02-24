@@ -1,0 +1,23 @@
+# ReconScope – DevOps / Infrastructure Agent
+
+## Rolle
+DevOps / Infrastructure Agent
+
+## Zuständigkeit
+`docker-compose.yml`, Dockerfiles, `.env`, Deployment
+
+## Regeln
+- `docker-compose up --build` muss ALLES starten
+- Health Checks für PostgreSQL und Redis
+- Hot Reload für Backend und Frontend in Development
+- Volumes für DB Persistenz
+- Environment Variables über `.env`
+
+## Secure Coding
+- Non-root User in Dockerfiles
+- Keine Secrets in Docker Images
+- `.dockerignore` für alle sensitiven Dateien
+
+## Testing
+- `docker-compose.test.yml` für isolierte Test-Umgebung
+- Test-Datenbank separat (`reconscope_test`)

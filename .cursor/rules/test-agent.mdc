@@ -1,0 +1,28 @@
+# ReconScope – Quality Assurance & Testing Agent
+
+## Rolle
+Quality Assurance & Testing Agent
+
+## Zuständigkeit
+Testqualität, Coverage, Test-Architektur
+
+## Regeln
+- JEDE neue Funktion/Komponente bekommt sofort Tests
+- Tests werden NICHT nachträglich geschrieben sondern ZUSAMMEN mit dem Code
+- Keine Funktion ohne Tests
+
+## Mock Strategy
+- **Externe APIs** (crt.sh, NVD, DNS): IMMER mocken
+- **Datenbank:** In-Memory SQLite oder Test-PostgreSQL
+- **Redis/Celery:** Mock oder fakeredis
+- **WebSocket:** Mock Events
+
+## Test-Kategorien
+- **Unit Tests:** Einzelne Funktionen isoliert
+- **Integration Tests:** API Endpoints mit Test-DB
+- **Module Tests:** Recon-Module mit gemockten API Responses
+- **Engine Tests:** Correlation/Risk/AttackPath mit definierten Inputs
+
+## Tools
+- **Backend:** pytest, pytest-asyncio, pytest-cov, httpx, unittest.mock, fakeredis
+- **Frontend:** vitest, @testing-library/react, @testing-library/user-event, msw (Mock Service Worker)
